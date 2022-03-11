@@ -1,0 +1,22 @@
+{
+  "name": "functions-lib",
+  "version": "1.0.0",
+  "description": "library for hoks, functions, & other helpers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natemking/functions-library.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/natemking/functions-library/issues"
+  },
+  "homepage": "https://github.com/natemking/functions-library#readme",
+  "dependencies": {
+    "react": "^17.0.2"
+  }
+}
