@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 
-export const useScreenDimension = () => {
-	const [dimension, setDimension] = useState({ width: 0, height: 0 });
+interface ScreenDimension {
+	width: number;
+	height: number;
+}
+
+export function useScreenDimension(): ScreenDimension {
+	const [dimension, setDimension] = useState<ScreenDimension>({ width: 0, height: 0 });
 
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
@@ -19,3 +24,5 @@ export const useScreenDimension = () => {
 
 	return dimension;
 };
+// Usage
+// const { width, height } = useScreenDimension();
