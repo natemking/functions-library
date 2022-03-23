@@ -1,4 +1,4 @@
-const slugify = (text: string) =>
+const slugifyString = (text: string) =>
 				text
 					.toString()
 					.normalize('NFD')
