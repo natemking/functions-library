@@ -1,8 +1,9 @@
+import { useEffect, useReducer, useRef } from 'react'
 // Hook found here:
 // https://usehooks-ts.com/react-hook/use-fetch
 
-import { useEffect, useReducer, useRef } from 'react';
-
+/** useFetch **/
+/**************/
 interface State<T> {
 	data?: T;
 	error?: Error;
@@ -84,30 +85,11 @@ export function useFetch<T = unknown>(
 		return () => {
 			cancelRequest.current = true;
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [url]);
 
 	return state;
 }
 
-// Usage:
-// import React from 'react';
-
-// import { useFetch } from 'usehooks-ts';
-
-// const url = `http://jsonplaceholder.typicode.com/posts`;
-
-// interface Post {
-// 	userId: number;
-// 	id: number;
-// 	title: string;
-// 	body: string;
-// }
-
-// export default function Component() {
-// 	const { data, error } = useFetch<Post[]>(url);
-
-// 	if (error) return <p>There is an error.</p>;
-// 	if (!data) return <p>Loading...</p>;
-// 	return <p>{data[0].title}</p>;
-// }
+//// Usage:
+//// const { data, error } = useFetch<Record<string, any>>(url);
+/**************/
