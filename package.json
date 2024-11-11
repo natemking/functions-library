@@ -18,5 +18,6 @@
   "homepage": "https://github.com/natemking/functions-library#readme",
   "dependencies": {
     "react": "^17.0.2"
-  }
+  },
+  "type": "module"
 }
