@@ -1,10 +1,47 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+
+/**
+ * Custom hook to debounce a value.
+ *
+ * @param value - The value to debounce.
+ * @param delay - The debounce delay in milliseconds.
+ * @returns The debounced value.
+ *
+ * @example
+ * Usage in a functional component
+ * 
+ * ```ts
+ * const SearchComponent = () => {
+ *     const [value, setValue] = useState<string>('');
+ *     const debouncedValue = useDebounce<string>(value, 500);
+ *
+ *     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+ *         setValue(event.target.value);
+ *     };
+ *
+ *     useEffect(() => {
+ *         // Perform the search or API call with 
+ *         // the debounced search term
+ *     }, [debouncedValue]);
+ *
+ *     return (
+ *             <input 
+ *              onChange={handleChange} 
+ *              type="text" 
+ *              value={value} 
+ *             />
+ *     );
+ * };
+ * ```
+ */
 
 const useDebounce = <T,>(value: T, delay?: number): T => {
     const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
     useEffect(() => {
-        const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
+        const timer = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay || 500);
 
         return () => {
             clearTimeout(timer);
@@ -15,29 +52,3 @@ const useDebounce = <T,>(value: T, delay?: number): T => {
 };
 
 export default useDebounce;
-
-/** Usage
-
-export default function Component() {
-    const [value, setValue] = useState<string>('')
-    const debouncedValue = useDebounce<string>(value, 500)
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value)
-    }
-
-  // Fetch API (optional)
-    useEffect(() => {
-        // Do fetch here...
-        // Triggers when "debouncedValue" changes
-    }, [debouncedValue])
-
-    return (
-    <div>
-        <input type="text" value={value} onChange={handleChange} />
-    </div>
-    )
-}
- 
- 
-******* */

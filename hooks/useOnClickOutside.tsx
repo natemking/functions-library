@@ -1,36 +1,70 @@
-// @ts-nocheck
-import {useEffect, RefObject} from 'react'
+import type { MutableRefObject } from 'react';
+import { useEffect } from 'react';
 
-/** useOnClickOutside */
-/***********************/
-type Handler = (event: MouseEvent) => void;
+type MouseOrTouchEvent = MouseEvent | TouchEvent;
 
-export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
-	ref: RefObject<T>,
-	handler: Handler
-) {
-	useEffect(() => {
-		const listener = (event: MouseEvent) => {
-			// Do nothing if clicking ref's element or descendent elements
-			if (!ref?.current || ref.current.contains(event.target as Node)) {
-				return;
-			}
-			handler(event);
-		};
-		document.addEventListener('mousedown', listener);
-		document.addEventListener('touchstart', listener);
+/**
+ * Custom hook to detect clicks outside of a specified element.
+ *
+ * @param ref - The ref of the element to detect outside clicks.
+ * @param handler - The handler function to call when an outside
+ * click is detected.
+ *
+ * @example
+ * Usage in a functional component
+ *
+ * NOTE, because the passed in handler is a new func on every
+ * render, that will cause this effect callback/cleanup to run
+ * every render. Optimize by wrapping handler in useCallback().
+ *
+ * ```ts
+ * const DropdownMenu = () => {
+ *     const [showMenu, setShowMenu] = useState<boolean>(false);
+ *     const menuRef = useRef<HTMLDivElement | null>(null);
+ *
+ *     const handleClickOutside = useCallback(() => {
+ *         setShowMenu(false);
+ *     }, []);
+ *
+ *     useOnClickOutside(menuRef, handleClickOutside);
+ *
+ *     return (
+ *         <div>
+ *             <button onClick={() => setShowMenu((prev) => !prev)}>Toggle Menu</button>
+ *             {showMenu && (
+ *                 <div ref={menuRef}>
+ *                     <p>Menu Item 1</p>
+ *                     <p>Menu Item 2</p>
+ *                 </div>
+ *             )}
+ *         </div>
+ *     );
+ * };
+ * ```
+ */
 
-		return () => {
-			document.removeEventListener('mousedown', listener);
-			document.removeEventListener('touchstart', listener);
-		};
-	}, [ref, handler]);
-}
-// because passed in handler is a new func on every render that
-// will cause this effect callback/cleanup to run every render.
-// to optimize, wrap handler in useCallback
+export const useOnClickOutside = <T extends HTMLElement = HTMLElement>(
+    ref: MutableRefObject<T | null>,
+    handler: (event: MouseOrTouchEvent) => void
+): void => {
+    useEffect(() => {
+        if (!ref.current) return;
 
-//// Usage:
-//// const [showMenu, setShowMenu] = useState<boolean>(false);
-//// const menuBtnRef = useRef(); - Create a ref to the element for which we want to detect outside clicks
-//// useOnClickOutside(menuBtnRef, useCallback(() => {setShowMenu(false)},[]));
+        const listener = (event: MouseOrTouchEvent): void => {
+            const target = event.target as HTMLElement | null;
+
+            if (ref.current && target && ref.current.contains(target)) {
+                return;
+            }
+            handler(event);
+        };
+
+        document.addEventListener('mousedown', listener);
+        document.addEventListener('touchstart', listener);
+
+        return () => {
+            document.removeEventListener('mousedown', listener);
+            document.removeEventListener('touchstart', listener);
+        };
+    }, [handler, ref]);
+};
