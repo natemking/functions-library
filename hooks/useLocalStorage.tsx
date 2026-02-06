@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import type { UseLocalStorageReturnType } from 'types';
+
+export type UseLocalStorageReturnType<T> = {
+    localStoreValue: T;
+    setLocalStoreValue: (value: T | ((val: T) => T)) => void;
+    removeLocalStoreValue: () => void;
+};
+
 
 /**
  * React hook for syncing state with localStorage.
